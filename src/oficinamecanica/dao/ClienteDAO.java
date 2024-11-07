@@ -1,17 +1,20 @@
-package oficinamecanica;
+package oficinamecanica.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import oficinamecanica.model.Cliente;
+import oficinamecanica.util.DatabaseConnection;
+
 public class ClienteDAO {
     
     //Método para adicionar um novo cliete ao banco de daods
     public void adicionarCliente(Cliente cliente) {
         String sql = "INSERT INTO Cliente(nome, telefone, email) VALUES (?, ?, ?)";
         
-        try (Connection conn = DatabaseConection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getTelefone());
             stmt.setString(3, cliente.getEmail());
@@ -29,7 +32,7 @@ public class ClienteDAO {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM Cliente";
         
-        try(Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.preparedStatement(sql); ResultSet rs = stmt.executeQuery()){
+        try(Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()){
             while (rs.next()){
                 Cliente cliente = new Cliente();
                 cliente.setId(rs.getInt("id"));

@@ -1,4 +1,4 @@
-package oficinamecanica;
+package oficinamecanica.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

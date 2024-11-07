@@ -1,4 +1,4 @@
-package oficinamecanica;
+package oficinamecanica.model;
 
 public class Cliente {
     private int id;
