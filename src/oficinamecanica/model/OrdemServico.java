@@ -1,17 +1,20 @@
 package oficinamecanica.model;
+
+import java.util.Date;
+
 public class OrdemServico {
     private int id;
     private int clienteId;
     private int veiculoId;
-    private int dataAbertura;
-    private int dataFechamento;
-    private float valorTotal;
+    private Date dataAbertura;
+    private Date dataFechamento;
+    private double valorTotal;
     private String status;
     
     //Construtores
     public OrdemServico(){}
 
-    public OrdemServico(int id, int clienteId, int veiculoId, int dataAbertura, int dataFechamento, float valorTotal, String status) {
+    public OrdemServico(int id, int clienteId, int veiculoId, Date dataAbertura, Date dataFechamento, float valorTotal, String status) {
         this.id = id;
         this.clienteId = clienteId;
         this.veiculoId = veiculoId;
@@ -47,27 +50,27 @@ public class OrdemServico {
         this.veiculoId = veiculoId;
     }
 
-    public int getDataAbertura() {
+    public Date getDataAbertura() {
         return dataAbertura;
     }
 
-    public void setDataAbertura(int dataAbertura) {
+    public void setDataAbertura(Date dataAbertura) {
         this.dataAbertura = dataAbertura;
     }
 
-    public int getDataFechamento() {
+    public Date getDataFechamento() {
         return dataFechamento;
     }
 
-    public void setDataFechamento(int dataFechamento) {
+    public void setDataFechamento(Date dataFechamento) {
         this.dataFechamento = dataFechamento;
     }
 
-    public float getValorTotal() {
+    public double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(float valorTotal) {
+    public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
     }
 

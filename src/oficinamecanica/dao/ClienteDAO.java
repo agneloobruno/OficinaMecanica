@@ -44,7 +44,7 @@ public class ClienteDAO {
             
         } catch(SQLException e) {
             e.printStackTrace();
-            System.out.println("Erro ao lista clientes.");
+            System.out.println("Erro ao listar clientes.");
         }
         
         return clientes;
@@ -87,5 +87,31 @@ public class ClienteDAO {
             e.printStackTrace();
             System.out.println("Erro ao excluir cliente.");
         }
+    }
+    
+    // Método para buscar um cliente por ID
+    public Cliente buscarPorId(int id) {
+        String sql = "SELECT * FROM Cliente WHERE id = ?";
+        Cliente cliente = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente();
+                cliente.setId(rs.getInt("id")); // id no banco de dados
+                cliente.setNome(rs.getString("nome"));
+                cliente.setTelefone(rs.getString("telefone"));
+                cliente.setEmail(rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao buscar cliente por ID.");
+        }
+
+        return cliente;
     }
 }
