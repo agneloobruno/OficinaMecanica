@@ -114,4 +114,8 @@ public class ClienteDAO {
 
         return cliente;
     }
+
+    public boolean existeClientePorEmail(String email) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

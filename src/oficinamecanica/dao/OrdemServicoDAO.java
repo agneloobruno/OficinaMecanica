@@ -105,4 +105,34 @@ public class OrdemServicoDAO {
             System.out.println("Erro ao excluir ordem de serviço.");
         }
     }
+    
+      // Método para buscar uma ordem de serviço por ID
+    public OrdemServico buscarPorId(int id) {
+        String sql = "SELECT * FROM OrdemServico WHERE id = ?";
+        OrdemServico ordemServico = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                ordemServico = new OrdemServico();
+                ordemServico.setId(rs.getInt("id"));
+                ordemServico.setClienteId(rs.getInt("cliente_id"));
+                ordemServico.setVeiculoId(rs.getInt("veiculo_id"));
+                ordemServico.setDataAbertura(rs.getDate("data_abertura"));
+                ordemServico.setDataFechamento(rs.getDate("data_fechamento"));
+                ordemServico.setValorTotal(rs.getDouble("valor_total"));
+                ordemServico.setStatus(rs.getString("status"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao buscar ordem de serviço por ID.");
+        }
+
+        return ordemServico;
+    }
 }
