@@ -111,6 +111,8 @@ public class ClienteDAO {
             e.printStackTrace();
             System.out.println("Erro ao buscar cliente por ID.");
         }
+        
+        
 
         return cliente;
     }
