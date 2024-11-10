@@ -2,7 +2,7 @@ package oficinamecanica.model;
 public class Servico {
    private int id;
    private String descricao;
-   private float preco;
+   private double preco;
    
    //Construtores
     public Servico(){}
@@ -31,11 +31,11 @@ public class Servico {
         this.descricao = descricao;
     }
 
-    public float getPreco() {
+    public double getPreco() {
         return preco;
     }
 
-    public void setPreco(float preco) {
+    public void setPreco(double preco) {
         this.preco = preco;
     }
     

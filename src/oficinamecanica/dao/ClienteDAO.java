@@ -116,4 +116,27 @@ public class ClienteDAO {
 
         return cliente;
     }
+
+    public boolean existeClientePorEmail(String email) {
+        String sql = "SELECT 1 FROM Cliente WHERE email = ?";
+        boolean existe = false;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                existe = true; // Se houver resultado, o cliente existe
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao verificar se o cliente existe por email.");
+        }
+
+        return existe;
+    }
+    
 }

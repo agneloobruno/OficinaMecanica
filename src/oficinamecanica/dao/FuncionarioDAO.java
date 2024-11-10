@@ -85,4 +85,28 @@ public class FuncionarioDAO {
             System.out.println("Erro ao deletar funcionario.");
         }
     }
+    
+    public Funcionario buscarPorId(int id) {
+        String sql = "SELECT * FROM Funcionario WHERE id = ?";
+        Funcionario funcionario = null;
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                funcionario = new Funcionario();
+                funcionario.setId(rs.getInt("id"));
+                funcionario.setNome(rs.getString("nome"));
+                funcionario.setCargo(rs.getString("cargo"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao buscar funcionário por ID.");
+        }
+
+        return funcionario;
+    }
+
 }
