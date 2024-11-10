@@ -11,3 +11,6 @@ mysql_data/
 # Ignorar arquivos temporários e logs
 *.log
 *.tmp
+
+# Ignorar arquivos class
+*.class
