@@ -2,22 +2,48 @@ package oficinamecanica.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import oficinamecanica.model.Servico;
+import oficinamecanica.service.ServicoService;
 
 public class ServicoListagemUI extends JFrame {
 
+    private JTextArea listaServicoArea;
+    private ServicoService servicoService;
+
     public ServicoListagemUI() {
+        servicoService = new ServicoService();
+
         setTitle("Listar Serviços");
-        setSize(300, 300);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JTextArea listaServicos = new JTextArea("Exemplo de lista de serviços...");
-        JButton voltarButton = new JButton("Voltar");
+        listaServicoArea = new JTextArea();
+        listaServicoArea.setEditable(false);
+        atualizarListaServico();
 
-        voltarButton.addActionListener(e -> this.dispose());
+        JScrollPane scrollPane = new JScrollPane(listaServicoArea);
 
-        setLayout(new BorderLayout());
-        add(new JScrollPane(listaServicos), BorderLayout.CENTER);
-        add(voltarButton, BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void atualizarListaServico() {
+        try {
+            List<Servico> servicos = servicoService.listarServicos();
+            listaServicoArea.setText("");  // Limpa a área de texto
+
+            for (Servico servico : servicos) {
+                listaServicoArea.append("ID: " + servico.getId() +
+                                        ", Descrição: " + servico.getDescricao() +
+                                        ", Preço: " + servico.getPreco() + "\n");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao listar serviços: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ServicoListagemUI().setVisible(true));
     }
 }

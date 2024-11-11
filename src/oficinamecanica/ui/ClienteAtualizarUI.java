@@ -1,7 +1,8 @@
 package oficinamecanica.ui;
 
 import javax.swing.*;
-import java.awt.*;
+import oficinamecanica.model.Cliente;
+import oficinamecanica.service.ClienteService;
 
 public class ClienteAtualizarUI extends JFrame {
 
@@ -10,48 +11,64 @@ public class ClienteAtualizarUI extends JFrame {
     private JTextField telefoneField;
     private JTextField emailField;
     private JButton atualizarButton;
-    private JButton voltarButton;
+    private ClienteService clienteService;
 
     public ClienteAtualizarUI() {
+        clienteService = new ClienteService();
+
         setTitle("Atualizar Cliente");
-        setSize(300, 250);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2, 10, 10));
-
-        JLabel idLabel = new JLabel("ID:");
         idField = new JTextField();
-        JLabel nomeLabel = new JLabel("Nome:");
         nomeField = new JTextField();
-        JLabel telefoneLabel = new JLabel("Telefone:");
         telefoneField = new JTextField();
-        JLabel emailLabel = new JLabel("Email:");
         emailField = new JTextField();
-
         atualizarButton = new JButton("Atualizar");
-        voltarButton = new JButton("Voltar");
 
         atualizarButton.addActionListener(e -> atualizarCliente());
-        voltarButton.addActionListener(e -> this.dispose());
 
-        panel.add(idLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("ID do Cliente:"));
         panel.add(idField);
-        panel.add(nomeLabel);
+        panel.add(new JLabel("Nome:"));
         panel.add(nomeField);
-        panel.add(telefoneLabel);
+        panel.add(new JLabel("Telefone:"));
         panel.add(telefoneField);
-        panel.add(emailLabel);
+        panel.add(new JLabel("Email:"));
         panel.add(emailField);
         panel.add(atualizarButton);
-        panel.add(voltarButton);
 
         add(panel);
     }
 
     private void atualizarCliente() {
-        // Implementação da lógica para atualizar cliente
-        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+        try {
+            int id = Integer.parseInt(idField.getText());
+            String nome = nomeField.getText();
+            String telefone = telefoneField.getText();
+            String email = emailField.getText();
+
+            Cliente cliente = new Cliente();
+            cliente.setId(id);
+            cliente.setNome(nome);
+            cliente.setTelefone(telefone);
+            cliente.setEmail(email);
+
+            clienteService.atualizarCliente(cliente);
+            JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+            idField.setText("");
+            nomeField.setText("");
+            telefoneField.setText("");
+            emailField.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ClienteAtualizarUI().setVisible(true));
     }
 }

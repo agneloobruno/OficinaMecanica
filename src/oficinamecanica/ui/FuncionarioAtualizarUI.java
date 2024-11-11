@@ -1,7 +1,8 @@
 package oficinamecanica.ui;
 
 import javax.swing.*;
-import java.awt.*;
+import oficinamecanica.model.Funcionario;
+import oficinamecanica.service.FuncionarioService;
 
 public class FuncionarioAtualizarUI extends JFrame {
 
@@ -9,44 +10,58 @@ public class FuncionarioAtualizarUI extends JFrame {
     private JTextField nomeField;
     private JTextField cargoField;
     private JButton atualizarButton;
-    private JButton voltarButton;
+    private FuncionarioService funcionarioService;
 
     public FuncionarioAtualizarUI() {
+        funcionarioService = new FuncionarioService();
+
         setTitle("Atualizar Funcionário");
         setSize(300, 250);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 2, 10, 10));
-
-        JLabel idLabel = new JLabel("ID:");
         idField = new JTextField();
-        JLabel nomeLabel = new JLabel("Nome:");
         nomeField = new JTextField();
-        JLabel cargoLabel = new JLabel("Cargo:");
         cargoField = new JTextField();
-
         atualizarButton = new JButton("Atualizar");
-        voltarButton = new JButton("Voltar");
 
         atualizarButton.addActionListener(e -> atualizarFuncionario());
-        voltarButton.addActionListener(e -> this.dispose());
 
-        panel.add(idLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("ID do Funcionário:"));
         panel.add(idField);
-        panel.add(nomeLabel);
+        panel.add(new JLabel("Nome:"));
         panel.add(nomeField);
-        panel.add(cargoLabel);
+        panel.add(new JLabel("Cargo:"));
         panel.add(cargoField);
         panel.add(atualizarButton);
-        panel.add(voltarButton);
 
         add(panel);
     }
 
     private void atualizarFuncionario() {
-        // Lógica para atualizar funcionário
-        JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
+        try {
+            int id = Integer.parseInt(idField.getText());
+            String nome = nomeField.getText();
+            String cargo = cargoField.getText();
+
+            Funcionario funcionario = new Funcionario();
+            funcionario.setId(id);
+            funcionario.setNome(nome);
+            funcionario.setCargo(cargo);
+
+            funcionarioService.atualizarFuncionario(funcionario);
+            JOptionPane.showMessageDialog(this, "Funcionário atualizado com sucesso!");
+            idField.setText("");
+            nomeField.setText("");
+            cargoField.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar funcionário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new FuncionarioAtualizarUI().setVisible(true));
     }
 }
