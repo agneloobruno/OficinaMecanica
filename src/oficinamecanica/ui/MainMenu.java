@@ -220,29 +220,28 @@ public class MainMenu {
     }
 
     // Métodos para Veículo
-    private static void cadastrarVeiculo() throws SQLException {
-        
+    private static void cadastrarVeiculo() {
         System.out.println("\n--- Cadastrar Veículo ---");
 
-        // Solicita o ID do cliente
-        System.out.print("ID do Cliente (necessário): ");
-        int clienteId = scanner.nextInt();
-        scanner.nextLine();
-
-        // Verifica se o cliente existe
-        if (clienteService.buscarClientePorId(clienteId) == null) {
-            System.out.println("Erro: Cliente não encontrado. Não é possível cadastrar o veículo sem um cliente válido.");
-            return; // Cancela o cadastro do veículo
-        }
-
-        System.out.println("\n--- Cadastrar Veículo ---");
         System.out.print("Marca: ");
         String marca = scanner.nextLine();
         System.out.print("Modelo: ");
         String modelo = scanner.nextLine();
-        System.out.print("Ano: ");
-        int ano = scanner.nextInt();
-        scanner.nextLine();
+
+        int ano = 0;
+        boolean anoValido = false;
+        while (!anoValido) {
+            System.out.print("Ano: ");
+            if (scanner.hasNextInt()) {
+                ano = scanner.nextInt();
+                anoValido = true;
+            } else {
+                System.out.println("Erro: Por favor, insira um ano válido (número inteiro).");
+                scanner.next(); // Descarta a entrada inválida
+            }
+        }
+        scanner.nextLine();  // Limpa o buffer após `nextInt`
+
         System.out.print("Placa: ");
         String placa = scanner.nextLine();
 
@@ -252,8 +251,15 @@ public class MainMenu {
         veiculo.setAno(ano);
         veiculo.setPlaca(placa);
 
-        veiculoService.cadastrarVeiculo(veiculo);
+        try {
+            veiculoService.cadastrarVeiculo(veiculo);
+            System.out.println("Veículo cadastrado com sucesso!");
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar veículo: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     private static void listarVeiculos() {
         System.out.println("\n--- Lista de Veículos ---");
@@ -342,6 +348,7 @@ public class MainMenu {
         ordemServicoService.excluirOrdemServico(id);
     }
     
+    
     private static void cadastrarCliente() {
         System.out.println("\n--- Cadastrar Cliente ---");
         System.out.print("Nome: ");
@@ -356,7 +363,91 @@ public class MainMenu {
         cliente.setTelefone(telefone);
         cliente.setEmail(email);
 
+        // Cadastra o cliente e obtém o ID do cliente criado
         clienteService.cadastrarCliente(cliente);
+        System.out.println("Cliente cadastrado com sucesso!");
+
+        // Pergunta se deseja cadastrar um veículo para o cliente
+        System.out.print("Deseja cadastrar um veículo para este cliente? (1 - Sim, 2 - Não): ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine(); // Limpa o buffer
+
+        if (opcao == 1) {
+            cadastrarVeiculoParaCliente(cliente.getId());
+        }
+    }
+    
+    private static void cadastrarClienteComVeiculo() {
+        System.out.println("\n--- Cadastrar Cliente ---");
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("Telefone: ");
+        String telefone = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+
+        Cliente cliente = new Cliente();
+        cliente.setNome(nome);
+        cliente.setTelefone(telefone);
+        cliente.setEmail(email);
+
+        // Cadastra o cliente e obtém o ID gerado
+        int clienteId = clienteService.cadastrarCliente(cliente);
+
+        if (clienteId <= 0) {
+            System.out.println("Erro: Não foi possível cadastrar o cliente ou o ID é inválido.");
+            return;
+        }
+
+        System.out.println("Cliente cadastrado com sucesso! ID: " + clienteId);
+
+        // Pergunta se deseja cadastrar um veículo para o cliente
+        System.out.print("Deseja cadastrar um veículo para este cliente? (1 - Sim, 2 - Não): ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine(); // Limpa o buffer
+
+        if (opcao == 1) {
+            cadastrarVeiculoParaCliente(clienteId);
+        }
+    }
+
+    private static void cadastrarVeiculoParaCliente(int clienteId) {
+        System.out.println("\n--- Cadastrar Veículo para Cliente ---");
+        System.out.print("Marca: ");
+        String marca = scanner.nextLine();
+        System.out.print("Modelo: ");
+        String modelo = scanner.nextLine();
+
+        int ano = 0;
+        boolean anoValido = false;
+        while (!anoValido) {
+            System.out.print("Ano: ");
+            if (scanner.hasNextInt()) {
+                ano = scanner.nextInt();
+                anoValido = true;
+            } else {
+                System.out.println("Erro: Por favor, insira um ano válido (número inteiro).");
+                scanner.next(); // Descarta a entrada inválida
+            }
+        }
+        scanner.nextLine();  // Limpa o buffer após `nextInt`
+
+        System.out.print("Placa: ");
+        String placa = scanner.nextLine();
+
+        Veiculo veiculo = new Veiculo();
+        veiculo.setMarca(marca);
+        veiculo.setModelo(modelo);
+        veiculo.setAno(ano);
+        veiculo.setPlaca(placa);
+
+        try {
+            veiculoService.cadastrarVeiculo(veiculo);
+            System.out.println("Veículo cadastrado com sucesso para o cliente ID: " + clienteId);
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar veículo: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private static void listarClientes() {

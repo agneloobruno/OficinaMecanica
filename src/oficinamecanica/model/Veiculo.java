@@ -1,7 +1,6 @@
 package oficinamecanica.model;
 public class Veiculo {
     private int id;
-    private int clienteId;
     private String placa;
     private String marca;
     private String modelo;
@@ -10,9 +9,8 @@ public class Veiculo {
     //Contrutores
     public Veiculo(){}
 
-    public Veiculo(int id, int clienteId, String placa, String marca, String modelo, int ano) {
+    public Veiculo(int id, String placa, String marca, String modelo, int ano) {
         this.id = id;
-        this.clienteId = clienteId;
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
@@ -29,13 +27,7 @@ public class Veiculo {
         this.id = id;
     }
 
-    public int getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(int clienteId) {
-        this.clienteId = clienteId;
-    }
+  
 
     public String getPlaca() {
         return placa;

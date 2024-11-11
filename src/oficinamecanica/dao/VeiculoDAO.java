@@ -14,26 +14,26 @@ import oficinamecanica.model.OrdemServico;
 public class VeiculoDAO {
     
     //Metodo para adicionar veiculo
-    public void adicionarVeiculo(Veiculo veiculo) throws SQLException{
-        String sql = "INSERT INTO Veiculo (cliente_id, placa, marca, modelo, ano) VALUES (?, ?, ?, ?, ?)";
-        
-        try(Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)){
-            
-            stmt.setInt(1, veiculo.getClienteId());
-            stmt.setString(2, veiculo.getPlaca());
-            stmt.setString(3,veiculo.getMarca());
-            stmt.setString(4, veiculo.getModelo());
-            stmt.setInt(5, veiculo.getAno());
-            
+    public void adicionarVeiculo(Veiculo veiculo) throws SQLException {
+        String sql = "INSERT INTO Veiculo (placa, marca, modelo, ano) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, veiculo.getPlaca());
+            stmt.setString(2, veiculo.getMarca());
+            stmt.setString(3, veiculo.getModelo());
+            stmt.setInt(4, veiculo.getAno());
+
             stmt.executeUpdate();
-            System.out.println("Veiculo cadastrado com sucesso!");
-            
-        } catch(SQLException e){
+            System.out.println("Veículo cadastrado com sucesso!");
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erro ao cadastrar veiculo");
+            System.out.println("Erro ao cadastrar veículo.");
+            throw e;
         }
     }
+
+
     
     // Método para listar todas as ordens de serviço
     public List<Veiculo> listarVeiculo() {
@@ -47,7 +47,6 @@ public class VeiculoDAO {
             while (rs.next()) {
                 Veiculo veiculo = new Veiculo();
                 veiculo.setId(rs.getInt("id")); // id no banco
-                veiculo.setClienteId(rs.getInt("cliente_id")); // cliente_id no banco
                 veiculo.setPlaca(rs.getString("placa")); 
                 veiculo.setMarca(rs.getString("marca")); 
                 veiculo.setModelo(rs.getString("modelo"));
@@ -65,26 +64,25 @@ public class VeiculoDAO {
 
     // Método para atualizar uma ordem de serviço existente
     public void atualizarVeiculo(Veiculo veiculo) {
-        String sql = "UPDATE OrdemServico SET cliente_id = ?, ano = ?, data_abertura = ?, data_fechamento = ?, valor_total = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE Veiculo SET ano = ?, placa = ?, marca = ?, modelo = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, veiculo.getClienteId()); // cliente_id no banco
-            stmt.setInt(2, veiculo.getAno()); 
-            stmt.setString(5, veiculo.getPlaca()); 
-            stmt.setString(6, veiculo.getMarca()); 
-            stmt.setInt(7, veiculo.getId()); // id no banco
-            stmt.setString(8, veiculo.getModelo());
+            stmt.setInt(2, veiculo.getAno());
+            stmt.setString(3, veiculo.getPlaca());
+            stmt.setString(4, veiculo.getMarca());
+            stmt.setString(5, veiculo.getModelo());
+            stmt.setInt(6, veiculo.getId());
 
             stmt.executeUpdate();
-            System.out.println("Veiculo atualizado com sucesso!");
+            System.out.println("Veículo atualizado com sucesso!");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erro ao atualizar veiculo.");
+            System.out.println("Erro ao atualizar veículo.");
         }
     }
+
 
     // Método para excluir 
     public void excluirVeiculo(int id) {
@@ -108,8 +106,7 @@ public class VeiculoDAO {
         String sql = "SELECT * FROM Veiculo WHERE id = ?";
         Veiculo veiculo = null;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -120,7 +117,7 @@ public class VeiculoDAO {
                 veiculo.setMarca(rs.getString("marca"));
                 veiculo.setModelo(rs.getString("modelo"));
                 veiculo.setAno(rs.getInt("ano"));
-             veiculo.setPlaca(rs.getString("placa"));
+                veiculo.setPlaca(rs.getString("placa"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,6 +126,7 @@ public class VeiculoDAO {
 
         return veiculo;
     }
+
 
 }
 
