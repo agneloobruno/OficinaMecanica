@@ -1,42 +1,48 @@
 package oficinamecanica.ui;
 
 import javax.swing.*;
-import java.awt.*;
+import oficinamecanica.service.OrdemServicoService;
 
 public class OrdemServicoExcluirUI extends JFrame {
 
     private JTextField idField;
     private JButton excluirButton;
-    private JButton voltarButton;
+    private OrdemServicoService ordemServicoService;
 
     public OrdemServicoExcluirUI() {
+        ordemServicoService = new OrdemServicoService();
+
         setTitle("Excluir Ordem de Serviço");
         setSize(300, 150);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2, 10, 10));
-
-        JLabel idLabel = new JLabel("ID da Ordem:");
         idField = new JTextField();
-
         excluirButton = new JButton("Excluir");
-        voltarButton = new JButton("Voltar");
 
         excluirButton.addActionListener(e -> excluirOrdemServico());
-        voltarButton.addActionListener(e -> this.dispose());
 
-        panel.add(idLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("ID da Ordem de Serviço:"));
         panel.add(idField);
         panel.add(excluirButton);
-        panel.add(voltarButton);
 
         add(panel);
     }
 
     private void excluirOrdemServico() {
-        // Lógica para excluir ordem de serviço
-        JOptionPane.showMessageDialog(this, "Ordem de Serviço excluída com sucesso!");
+        try {
+            int id = Integer.parseInt(idField.getText());
+            ordemServicoService.excluirOrdemServico(id);
+            JOptionPane.showMessageDialog(this, "Ordem de serviço excluída com sucesso!");
+            idField.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir ordem de serviço: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new OrdemServicoExcluirUI().setVisible(true));
     }
 }

@@ -1,42 +1,48 @@
 package oficinamecanica.ui;
 
 import javax.swing.*;
-import java.awt.*;
+import oficinamecanica.service.FuncionarioService;
 
 public class FuncionarioExcluirUI extends JFrame {
 
     private JTextField idField;
     private JButton excluirButton;
-    private JButton voltarButton;
+    private FuncionarioService funcionarioService;
 
     public FuncionarioExcluirUI() {
+        funcionarioService = new FuncionarioService();
+
         setTitle("Excluir Funcionário");
         setSize(300, 150);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2, 10, 10));
-
-        JLabel idLabel = new JLabel("ID:");
         idField = new JTextField();
-
         excluirButton = new JButton("Excluir");
-        voltarButton = new JButton("Voltar");
 
         excluirButton.addActionListener(e -> excluirFuncionario());
-        voltarButton.addActionListener(e -> this.dispose());
 
-        panel.add(idLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("ID do Funcionário:"));
         panel.add(idField);
         panel.add(excluirButton);
-        panel.add(voltarButton);
 
         add(panel);
     }
 
     private void excluirFuncionario() {
-        // Lógica para excluir funcionário
-        JOptionPane.showMessageDialog(this, "Funcionário excluído com sucesso!");
+        try {
+            int id = Integer.parseInt(idField.getText());
+            funcionarioService.excluirFuncionario(id);
+            JOptionPane.showMessageDialog(this, "Funcionário excluído com sucesso!");
+            idField.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir funcionário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new FuncionarioExcluirUI().setVisible(true));
     }
 }

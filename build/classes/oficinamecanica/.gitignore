@@ -1,0 +1,16 @@
+# Ignorar arquivos de configuração específicos de IDEs
+*.iml
+/.idea/
+/out/
+/build/
+
+# Ignorar volumes e dados do Docker
+docker_data/
+mysql_data/
+
+# Ignorar arquivos temporários e logs
+*.log
+*.tmp
+
+# Ignorar arquivos class
+*.class

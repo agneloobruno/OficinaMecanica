@@ -1,7 +1,8 @@
 package oficinamecanica.ui;
 
 import javax.swing.*;
-import java.awt.*;
+import oficinamecanica.model.Veiculo;
+import oficinamecanica.service.VeiculoService;
 
 public class VeiculoAtualizarUI extends JFrame {
 
@@ -11,52 +12,70 @@ public class VeiculoAtualizarUI extends JFrame {
     private JTextField anoField;
     private JTextField placaField;
     private JButton atualizarButton;
-    private JButton voltarButton;
+    private VeiculoService veiculoService;
 
     public VeiculoAtualizarUI() {
+        veiculoService = new VeiculoService();
+
         setTitle("Atualizar Veículo");
         setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 2, 10, 10));
-
-        JLabel idLabel = new JLabel("ID:");
         idField = new JTextField();
-        JLabel marcaLabel = new JLabel("Marca:");
         marcaField = new JTextField();
-        JLabel modeloLabel = new JLabel("Modelo:");
         modeloField = new JTextField();
-        JLabel anoLabel = new JLabel("Ano:");
         anoField = new JTextField();
-        JLabel placaLabel = new JLabel("Placa:");
         placaField = new JTextField();
-
         atualizarButton = new JButton("Atualizar");
-        voltarButton = new JButton("Voltar");
 
         atualizarButton.addActionListener(e -> atualizarVeiculo());
-        voltarButton.addActionListener(e -> this.dispose());
 
-        panel.add(idLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("ID do Veículo:"));
         panel.add(idField);
-        panel.add(marcaLabel);
+        panel.add(new JLabel("Marca:"));
         panel.add(marcaField);
-        panel.add(modeloLabel);
+        panel.add(new JLabel("Modelo:"));
         panel.add(modeloField);
-        panel.add(anoLabel);
+        panel.add(new JLabel("Ano:"));
         panel.add(anoField);
-        panel.add(placaLabel);
+        panel.add(new JLabel("Placa:"));
         panel.add(placaField);
         panel.add(atualizarButton);
-        panel.add(voltarButton);
 
         add(panel);
     }
 
     private void atualizarVeiculo() {
-        // Lógica para atualizar veículo
-        JOptionPane.showMessageDialog(this, "Veículo atualizado com sucesso!");
+        try {
+            int id = Integer.parseInt(idField.getText());
+            String marca = marcaField.getText();
+            String modelo = modeloField.getText();
+            int ano = Integer.parseInt(anoField.getText());
+            String placa = placaField.getText();
+
+            Veiculo veiculo = new Veiculo();
+            veiculo.setId(id);
+            veiculo.setMarca(marca);
+            veiculo.setModelo(modelo);
+            veiculo.setAno(ano);
+            veiculo.setPlaca(placa);
+
+            veiculoService.atualizarVeiculo(veiculo);
+            JOptionPane.showMessageDialog(this, "Veículo atualizado com sucesso!");
+            idField.setText("");
+            marcaField.setText("");
+            modeloField.setText("");
+            anoField.setText("");
+            placaField.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar veículo: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new VeiculoAtualizarUI().setVisible(true));
     }
 }
